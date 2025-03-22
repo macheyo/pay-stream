@@ -20,7 +20,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "banks", uniqueConstraints = {
-        @UniqueConstraint(name = "branch_code", columnNames = "branch_code")
+        @UniqueConstraint(name = "unique_branch_code_per_tenant", columnNames = {"branch_code", "tenant_id"})
 })
 public class Bank extends PanacheEntity {
     @Column(name = "tenant_id", nullable = false)
