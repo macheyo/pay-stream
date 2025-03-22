@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * <p>
  * © 2025 justice.m. All rights reserved
  **/
-@Path("/api/banks")
+@Path("/api/v1/banks")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped

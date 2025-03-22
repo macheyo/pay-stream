@@ -29,8 +29,6 @@ public class BankService implements IBankService {
     @Inject
     IAuditService auditService;
 
-    @Inject
-    TenantContext tenantContext;
 
     @Override
     @Transactional
@@ -105,7 +103,6 @@ public class BankService implements IBankService {
 
     @Override
     public Bank getBankByBranchCode(String branchCode) {
-        String tenantId = tenantContext.getTenantId();
         return bankRepository.findByBranchCode(branchCode)
                 .orElseThrow(() -> new NotFoundException("Bank not found with branch code: " + branchCode));
     }
@@ -117,7 +114,6 @@ public class BankService implements IBankService {
 
     @Override
     public List<Bank> getActiveBanks() {
-        String tenantId = tenantContext.getTenantId();
         return bankRepository.findActiveBank();
     }
 }
