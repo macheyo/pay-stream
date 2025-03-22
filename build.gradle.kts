@@ -18,6 +18,6 @@ allprojects {
 tasks.register("runAll") {
     description = "Run all services"
     // Uncomment as you add more services
-//    dependsOn(":apps:rest-service:quarkusDev")
+    dependsOn(":apps:transaction-service:quarkusDev")
 //    dependsOn(":apps:processing-service:quarkusDev")
 }
