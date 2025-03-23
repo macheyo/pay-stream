@@ -18,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import service.TransactionService;
+import util.RequiresRole;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class TransactionResource {
     UriInfo uriInfo;
 
     @POST
+    @RequiresRole("TRANSACTION_CREATOR")
     @Operation(summary = "Create a new transaction",
             description = "Creates a new transaction with PENDING_APPROVAL status")
     @APIResponse(
@@ -136,6 +138,7 @@ public class TransactionResource {
     }
 
     @POST
+    @RequiresRole("TRANSACTION_CREATOR")
     @Path("/bulk")
     @Operation(summary = "Create multiple transactions in a batch",
             description = "Creates multiple transactions with a common batch ID and PENDING_APPROVAL status")
@@ -265,6 +268,7 @@ public class TransactionResource {
     }
 
     @GET
+    @RequiresRole({"TRANSACTION_CREATOR", "TRANSACTION_APPROVER", "TRANSACTION_VIEWER"})
     @Path("/{id}")
     @Operation(summary = "Get a transaction by ID",
             description = "Returns a transaction by its ID")
@@ -355,6 +359,7 @@ public class TransactionResource {
     }
 
     @GET
+    @RequiresRole({"TRANSACTION_CREATOR", "TRANSACTION_APPROVER", "TRANSACTION_VIEWER"})
     @Path("/batch/{batchId}")
     @Operation(summary = "Get transactions by batch ID",
             description = "Returns all transactions that belong to a specific batch")
@@ -480,6 +485,7 @@ public class TransactionResource {
     }
 
     @PUT
+    @RequiresRole("TRANSACTION_APPROVER")
     @Path("/{id}/approve")
     @Operation(summary = "Approve a transaction",
             description = "Approves a pending transaction")
@@ -580,6 +586,7 @@ public class TransactionResource {
     }
 
     @PUT
+    @RequiresRole("TRANSACTION_APPROVER")
     @Path("/{id}/reject")
     @Operation(summary = "Reject a transaction",
             description = "Rejects a pending transaction")
@@ -680,6 +687,7 @@ public class TransactionResource {
     }
 
     @GET
+    @RequiresRole({"TRANSACTION_CREATOR", "TRANSACTION_APPROVER", "TRANSACTION_VIEWER"})
     @Path("/status/{status}")
     @Operation(summary = "Get transactions by status",
             description = "Returns all transactions with the specified status")

@@ -18,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import service.IBankService;
+import util.RequiresRole;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Tag(name = "Bank", description = "Bank management operations")
+@RequiresRole("ADMIN")
 public class BankResource {
 
     @Inject

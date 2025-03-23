@@ -4,10 +4,9 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import models.Bank;
 import models.Transaction;
 import models.TransactionStatus;
-import util.TenantContext;
+import util.SecurityContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,29 +25,29 @@ import java.util.Optional;
 public class TransactionRepository implements PanacheRepository<Transaction>, ITransactionRepository, TenantAwareRepository<Transaction> {
 
     @Inject
-    TenantContext tenantContext;
+    SecurityContext securityContext;
 
     @Inject
     EntityManager entityManager;
 
     @Override
     public void setTenantFilter(Transaction transaction) {
-        transaction.setTenantId(tenantContext.getTenantId());
+        transaction.setTenantId(securityContext.getTenantId());
     }
 
     @Override
     public void persist(Transaction transaction) {
-        transaction.setTenantId(tenantContext.getTenantId());
+        transaction.setTenantId(securityContext.getTenantId());
         entityManager.persist(transaction);
     }
 
     @Override
     public Optional<Transaction> findByIdOptional(Long id) {
-        return find("id = ?1 and tenantId = ?2", id, tenantContext.getTenantId()).firstResultOptional();
+        return find("id = ?1 and tenantId = ?2", id, securityContext.getTenantId()).firstResultOptional();
     }
     @Override
     public List<Transaction> findByBatchId(String batchId) {
-        return list("tenantId = ?1 and batchId = ?2",tenantContext.getTenantId(), batchId);
+        return list("tenantId = ?1 and batchId = ?2", securityContext.getTenantId(), batchId);
     }
     @Override
     public List<Transaction> findByStatus(TransactionStatus status) {
@@ -56,6 +55,6 @@ public class TransactionRepository implements PanacheRepository<Transaction>, IT
     }
     @Override
     public List<Transaction> listAll() {
-        return list("tenantId", tenantContext.getTenantId());
+        return list("tenantId", securityContext.getTenantId());
     }
 }

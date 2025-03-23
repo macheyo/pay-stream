@@ -11,6 +11,7 @@ package util;
  **/
 
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -37,8 +38,29 @@ import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
                 securitySchemeName = "tenant-header",
                 type = SecuritySchemeType.APIKEY,
                 apiKeyName = "X-Tenant-ID",
-                in = org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn.HEADER,
+                in = SecuritySchemeIn.HEADER,
                 description = "Tenant identifier - required for all API calls"
+        ),
+        @SecurityScheme(
+                securitySchemeName = "user-header",
+                type = SecuritySchemeType.APIKEY,
+                apiKeyName = "X-User-ID",
+                in = SecuritySchemeIn.HEADER,
+                description = "User identifier - required for all API calls"
+        ),
+        @SecurityScheme(
+                securitySchemeName = "user-email-header",
+                type = SecuritySchemeType.APIKEY,
+                apiKeyName = "X-User-Email",
+                in = SecuritySchemeIn.HEADER,
+                description = "User email - required for all API calls"
+        ),
+        @SecurityScheme(
+                securitySchemeName = "roles-header",
+                type = SecuritySchemeType.APIKEY,
+                apiKeyName = "X-User-Roles",
+                in = SecuritySchemeIn.HEADER,
+                description = "User roles - required for authorized API calls"
         )
 })
 public class TransactionServiceApplication extends jakarta.ws.rs.core.Application {

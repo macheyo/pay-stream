@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import models.Bank;
 import repository.IBankRepository;
-import util.TenantContext;
 
 import java.util.List;
 

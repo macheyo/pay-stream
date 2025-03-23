@@ -5,8 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import models.AuditLog;
-import models.Bank;
-import util.TenantContext;
+import util.SecurityContext;
 
 import java.util.List;
 
@@ -22,23 +21,23 @@ import java.util.List;
 @ApplicationScoped
 public class AuditLogRepository implements PanacheRepository<AuditLog>, IAuditLogRepository,  TenantAwareRepository<AuditLog> {
     @Inject
-    TenantContext tenantContext;
+    SecurityContext securityContext;
 
     @Inject
     EntityManager entityManager;
 
     @Override
     public void setTenantFilter(AuditLog auditLog) {
-        auditLog.setTenantId(tenantContext.getTenantId());
+        auditLog.setTenantId(securityContext.getTenantId());
     }
 
     @Override
     public void persist(AuditLog auditLog) {
-        auditLog.setTenantId(tenantContext.getTenantId());
+        auditLog.setTenantId(securityContext.getTenantId());
         entityManager.persist(auditLog);
     }
     @Override
     public List<AuditLog> listAll() {
-        return list("tenantId", tenantContext.getTenantId());
+        return list("tenantId", securityContext.getTenantId());
     }
 }

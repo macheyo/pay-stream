@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import models.Bank;
-import util.TenantContext;
+import util.SecurityContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,40 +24,40 @@ import java.util.Optional;
 public class BankRepository implements PanacheRepository<Bank>, IBankRepository, TenantAwareRepository<Bank> {
 
     @Inject
-    TenantContext tenantContext;
+    SecurityContext securityContext;
 
     @Inject
     EntityManager entityManager;
 
     @Override
     public void setTenantFilter(Bank bank) {
-        bank.setTenantId(tenantContext.getTenantId());
+        bank.setTenantId(securityContext.getTenantId());
     }
 
     @Override
     public void persist(Bank bank) {
-        bank.setTenantId(tenantContext.getTenantId());
+        bank.setTenantId(securityContext.getTenantId());
         entityManager.persist(bank);
     }
 
     @Override
     public Optional<Bank> findByIdOptional(Long id) {
-        return find("id = ?1 and tenantId = ?2", id, tenantContext.getTenantId()).firstResultOptional();
+        return find("id = ?1 and tenantId = ?2", id, securityContext.getTenantId()).firstResultOptional();
     }
 
     @Override
     public Optional<Bank> findByBranchCode(String branchCode) {
-        return find("branchCode = ?1 and tenantId = ?2", branchCode, tenantContext.getTenantId()).firstResultOptional();
+        return find("branchCode = ?1 and tenantId = ?2", branchCode, securityContext.getTenantId()).firstResultOptional();
     }
 
     @Override
     public List<Bank> findActiveBank() {
-        return list("active = true and tenantId = ?1", tenantContext.getTenantId());
+        return list("active = true and tenantId = ?1", securityContext.getTenantId());
     }
 
     @Override
     public List<Bank> listAll() {
-        return list("tenantId", tenantContext.getTenantId());
+        return list("tenantId", securityContext.getTenantId());
     }
 
 }

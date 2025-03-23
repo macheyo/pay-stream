@@ -24,6 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import service.IAuditService;
+import util.RequiresRole;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Tag(name = "AuditLog", description = "Audit trail of all operations")
+@RequiresRole("ADMIN")
 public class AuditResource {
 
     @Context

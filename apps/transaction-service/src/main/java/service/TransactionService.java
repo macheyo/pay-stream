@@ -14,8 +14,6 @@ import models.Transaction;
 import models.TransactionStatus;
 import repository.IBankRepository;
 import repository.ITransactionRepository;
-import repository.TransactionRepository;
-import util.TenantContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
