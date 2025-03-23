@@ -1,0 +1,5 @@
+# apps/transaction-service/Dockerfile
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY build/transaction-service-1.0.0-SNAPSHOT-runner.jar app.jar
+CMD ["java", "-jar", "app.jar"]

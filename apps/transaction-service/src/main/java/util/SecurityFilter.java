@@ -41,6 +41,18 @@ public class SecurityFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
+        // Skip security checks for specific paths
+        String path = requestContext.getUriInfo().getPath();
+
+        // Allow health endpoint without security checks
+        if (path.equals("health") || path.endsWith("/health")) {
+            return;
+        }
+
+        // For OPTIONS requests (CORS preflight), skip the check
+        if (requestContext.getMethod().equals("OPTIONS")) {
+            return;
+        }
         // Extract tenant ID
         String tenantId = requestContext.getHeaderString(TENANT_HEADER);
         if (tenantId == null || tenantId.trim().isEmpty()) {
