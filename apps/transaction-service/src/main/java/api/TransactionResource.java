@@ -109,8 +109,7 @@ public class TransactionResource {
             )
     })
     public Response createTransaction(@Valid TransactionRequestDTO requestDTO) {
-        // For now, using a mock user ID. In a real app, this would come from authentication
-        String userId = "system";
+        String userId = securityContext.getUserId();
 
         Transaction transaction = transactionService.createTransaction(requestDTO, userId);
         TransactionResponseDTO responseDTO = new TransactionResponseDTO(transaction);
@@ -246,8 +245,8 @@ public class TransactionResource {
             )
     })
     public Response createBulkTransactions(@Valid BulkTransactionRequestDTO requestDTO) {
-        // For now, using a mock user ID. In a real app, this would come from authentication
-        String userId = "system";
+
+        String userId = securityContext.getUserId();
 
         List<Transaction> transactions = transactionService.createBulkTransactions(requestDTO, userId);
         String batchId = transactions.get(0).getBatchId();

@@ -19,6 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import service.IBankService;
 import util.RequiresRole;
+import util.SecurityContext;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -44,6 +45,9 @@ public class BankResource {
 
     @Inject
     IBankService bankService;
+
+    @Inject
+    SecurityContext securityContext;
 
     @Context
     UriInfo uriInfo;
@@ -106,7 +110,7 @@ public class BankResource {
     })
     public Response createBank(@Valid BankRequestDTO bankRequestDTO) {
         // For now, using a mock user ID. In a real app, this would come from authentication
-        String userId = "system";
+        String userId = securityContext.getUserId();
 
         Bank bank = bankService.createBank(bankRequestDTO, userId);
         BankResponseDTO responseDTO = new BankResponseDTO(bank);
@@ -331,8 +335,8 @@ public class BankResource {
             )
     })
     public Response toggleBankStatus(@PathParam("id") Long id) {
-        // For now, using a mock user ID. In a real app, this would come from authentication
-        String userId = "system";
+
+        String userId = securityContext.getUserId();
 
         // Create a DTO with active=false
         Bank selectedBank = bankService.getBank(id);
