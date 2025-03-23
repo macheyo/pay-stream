@@ -24,5 +24,7 @@ public interface ITransactionService {
     List<Transaction> getTransactionsByBatchId(String batchId);
     Transaction approveTransaction(Long id, ApprovalRequestDTO approvalDTO, String approverId);
     Transaction rejectTransaction(Long id, RejectionRequestDTO rejectionDTO, String rejecterId);
+    List<Transaction> batchApproveTransactions(String batchId, ApprovalRequestDTO approvalDTO, String approverId);
+    List<Transaction> batchRejectTransactions(String batchId, RejectionRequestDTO rejectionDTO, String rejecterId);
     List<Transaction> getTransactionsByStatus(String status);
 }

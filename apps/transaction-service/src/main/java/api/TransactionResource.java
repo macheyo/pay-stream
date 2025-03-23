@@ -25,6 +25,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Project: pay-stream
@@ -865,6 +866,278 @@ public class TransactionResource {
                         .build();
                 txLinks.put("batch", batchUri.toString());
             }
+
+            if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+                // Check if user has approver role
+                if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                        !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                    URI approveUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("approve")
+                            .build();
+                    links.put("approve", approveUri.toString());
+
+                    URI rejectUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("reject")
+                            .build();
+                    links.put("reject", rejectUri.toString());
+                }
+            }
+
+            // Collection link - back to all banks
+            URI collectionUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .build();
+            links.put("collection", collectionUri.toString());
+
+            transactionLinks.put(String.valueOf(transaction.id), txLinks);
+        }
+        links.put("transaction-details", transactionLinks);
+
+        response.put("_links", links);
+
+        return Response.ok(response).build();
+    }
+
+    @PUT
+    @Path("/batch/{batchId}/approve")
+    @Operation(summary = "Approve all pending transactions in a batch",
+            description = "Approves all pending transactions belonging to a specific batch")
+    @APIResponse(
+            responseCode = "200",
+            description = "Transactions approved successfully",
+            content = @Content(mediaType = "application/json")
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Invalid batch ID or no pending transactions in batch"
+    )
+    @APIResponse(
+            responseCode = "403",
+            description = "User not authorized to approve transactions"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-Tenant-ID header"
+    )
+    @RequiresRole("TRANSACTION_APPROVER")
+    @Parameters({
+            @Parameter(
+                    name = "X-Tenant-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            )
+    })
+    public Response batchApproveTransactions(
+            @PathParam("batchId") String batchId,
+            @Valid ApprovalRequestDTO approvalDTO) {
+
+        // Get user ID from security context
+        String approverId = securityContext.getUserId();
+
+        // Call service layer to perform batch approval
+        List<Transaction> approvedTransactions = transactionService.batchApproveTransactions(batchId, approvalDTO, approverId);
+
+        // Create response DTOs
+        List<TransactionResponseDTO> responseDTOs = approvedTransactions.stream()
+                .map(TransactionResponseDTO::new)
+                .collect(Collectors.toList());
+
+        // Create a wrapper object for the response with links
+        Map<String, Object> response = new HashMap<>();
+        response.put("batchId", batchId);
+        response.put("approvedCount", approvedTransactions.size());
+        response.put("transactions", responseDTOs);
+
+        // Create links map
+        Map<String, Object> links = new HashMap<>();
+
+        // Self link
+        URI selfUri = uriInfo.getAbsolutePath();
+        links.put("self", selfUri.toString());
+
+        // Batch link
+        URI batchUri = uriInfo.getBaseUriBuilder()
+                .path(TransactionResource.class)
+                .path("batch")
+                .path(batchId)
+                .build();
+        links.put("batch", batchUri.toString());
+
+        // Transaction collection link
+        URI transactionsUri = uriInfo.getBaseUriBuilder()
+                .path(TransactionResource.class)
+                .build();
+        links.put("transactions", transactionsUri.toString());
+
+        // Links for individual transactions
+        Map<String, Object> transactionLinks = new HashMap<>();
+        for (Transaction transaction : approvedTransactions) {
+            URI transactionUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+
+            Map<String, String> txLinks = new HashMap<>();
+            txLinks.put("self", transactionUri.toString());
+            // Self link - link to this resource
+            links.put("self", selfUri.toString());
+
+            // Update link - PUT to the same URI
+            URI updateUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+            links.put("update", updateUri.toString());
+
+            // Delete link - DELETE to the same URI
+            URI deleteUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+            links.put("delete", deleteUri.toString());
+
+            if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+                // Check if user has approver role
+                if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                        !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                    URI approveUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("approve")
+                            .build();
+                    links.put("approve", approveUri.toString());
+
+                    URI rejectUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("reject")
+                            .build();
+                    links.put("reject", rejectUri.toString());
+                }
+            }
+
+            // Collection link - back to all banks
+            URI collectionUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .build();
+            links.put("collection", collectionUri.toString());
+
+            transactionLinks.put(String.valueOf(transaction.id), txLinks);
+        }
+        links.put("transaction-details", transactionLinks);
+
+        response.put("_links", links);
+
+        return Response.ok(response).build();
+    }
+
+    @PUT
+    @Path("/batch/{batchId}/reject")
+    @Operation(summary = "Reject all pending transactions in a batch",
+            description = "Rejects all pending transactions belonging to a specific batch")
+    @APIResponse(
+            responseCode = "200",
+            description = "Transactions rejected successfully",
+            content = @Content(mediaType = "application/json")
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Invalid batch ID or no pending transactions in batch"
+    )
+    @APIResponse(
+            responseCode = "403",
+            description = "User not authorized to reject transactions"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-Tenant-ID header"
+    )
+    @RequiresRole("TRANSACTION_APPROVER")
+    @Parameters({
+            @Parameter(
+                    name = "X-Tenant-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            )
+    })
+    public Response batchRejectTransactions(
+            @PathParam("batchId") String batchId,
+            @Valid RejectionRequestDTO rejectionDTO) {
+
+        // Get user ID from security context
+        String rejecterId = securityContext.getUserId();
+
+        // Call service layer to perform batch rejection
+        List<Transaction> rejectedTransactions = transactionService.batchRejectTransactions(batchId, rejectionDTO, rejecterId);
+
+        // Create response DTOs
+        List<TransactionResponseDTO> responseDTOs = rejectedTransactions.stream()
+                .map(TransactionResponseDTO::new)
+                .collect(Collectors.toList());
+
+        // Create a wrapper object for the response with links
+        Map<String, Object> response = new HashMap<>();
+        response.put("batchId", batchId);
+        response.put("rejectedCount", rejectedTransactions.size());
+        response.put("transactions", responseDTOs);
+
+        // Create links map
+        Map<String, Object> links = new HashMap<>();
+
+        // Self link
+        URI selfUri = uriInfo.getAbsolutePath();
+        links.put("self", selfUri.toString());
+
+        // Batch link
+        URI batchUri = uriInfo.getBaseUriBuilder()
+                .path(TransactionResource.class)
+                .path("batch")
+                .path(batchId)
+                .build();
+        links.put("batch", batchUri.toString());
+
+        // Transaction collection link
+        URI transactionsUri = uriInfo.getBaseUriBuilder()
+                .path(TransactionResource.class)
+                .build();
+        links.put("transactions", transactionsUri.toString());
+
+        // Links for individual transactions
+        Map<String, Object> transactionLinks = new HashMap<>();
+        for (Transaction transaction : rejectedTransactions) {
+            URI transactionUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+
+            Map<String, String> txLinks = new HashMap<>();
+            txLinks.put("self", transactionUri.toString());
+            // Self link - link to this resource
+            links.put("self", selfUri.toString());
+
+            // Update link - PUT to the same URI
+            URI updateUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+            links.put("update", updateUri.toString());
+
+            // Delete link - DELETE to the same URI
+            URI deleteUri = uriInfo.getBaseUriBuilder()
+                    .path(TransactionResource.class)
+                    .path(String.valueOf(transaction.id))
+                    .build();
+            links.put("delete", deleteUri.toString());
 
             if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
                 // Check if user has approver role

@@ -14,6 +14,7 @@ import models.Transaction;
 import models.TransactionStatus;
 import repository.IBankRepository;
 import repository.ITransactionRepository;
+import util.SecurityContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class TransactionService implements ITransactionService {
 
     @Inject
     IBankRepository bankRepository;
+
+    @Inject
+    SecurityContext securityContext;
 
     @Inject
     IAuditService auditService;
@@ -115,6 +119,112 @@ public class TransactionService implements ITransactionService {
         return transactions;
     }
 
+    @Override
+    @Transactional
+    public List<Transaction> batchApproveTransactions(String batchId, ApprovalRequestDTO approvalDTO, String approverId) {
+        // Get all pending transactions in the batch
+        List<Transaction> pendingTransactions = transactionRepository.find(
+                "batchId = ?1 and status = ?2 and tenantId = ?3",
+                batchId,
+                TransactionStatus.PENDING_APPROVAL,
+                securityContext.getTenantId()
+        ).list();
+
+        if (pendingTransactions.isEmpty()) {
+            throw new BadRequestException("No pending transactions found in batch: " + batchId);
+        }
+
+        List<Transaction> approvedTransactions = new ArrayList<>();
+
+        for (Transaction transaction : pendingTransactions) {
+            // Skip transactions created by the approver (separation of duties)
+            if (approverId.equals(transaction.getCreatedBy())) {
+                continue;
+            }
+
+            // Update transaction status
+            transaction.setStatus(TransactionStatus.APPROVED);
+            transaction.setApprovedBy(approverId);
+            transaction.setApprovedAt(LocalDateTime.now());
+            transaction.setApprovalNotes(approvalDTO.getNotes());
+
+            // Create audit log
+            auditService.logEvent(
+                    "Transaction",
+                    transaction.id,
+                    "APPROVE",
+                    approverId,
+                    approvalDTO
+            );
+
+            approvedTransactions.add(transaction);
+        }
+
+        // Create batch approval audit log
+        auditService.logEvent(
+                "TransactionBatch",
+                null,
+                "BATCH_APPROVE",
+                approverId,
+                new Object() {
+                    public final String batchIdentifier = batchId;
+                    public final int count = approvedTransactions.size();
+                }
+        );
+
+        return approvedTransactions;
+    }
+
+    @Override
+    @Transactional
+    public List<Transaction> batchRejectTransactions(String batchId, RejectionRequestDTO rejectionDTO, String rejecterId) {
+        // Get all pending transactions in the batch
+        List<Transaction> pendingTransactions = transactionRepository.find(
+                "batchId = ?1 and status = ?2 and tenantId = ?3",
+                batchId,
+                TransactionStatus.PENDING_APPROVAL,
+                securityContext.getTenantId()
+        ).list();
+
+        if (pendingTransactions.isEmpty()) {
+            throw new BadRequestException("No pending transactions found in batch: " + batchId);
+        }
+
+        List<Transaction> rejectedTransactions = new ArrayList<>();
+
+        for (Transaction transaction : pendingTransactions) {
+            // Update transaction status
+            transaction.setStatus(TransactionStatus.REJECTED);
+            transaction.setRejectedBy(rejecterId);
+            transaction.setRejectedAt(LocalDateTime.now());
+            transaction.setRejectionReason(rejectionDTO.getReason());
+
+            // Create audit log
+            auditService.logEvent(
+                    "Transaction",
+                    transaction.id,
+                    "REJECT",
+                    rejecterId,
+                    rejectionDTO
+            );
+
+            rejectedTransactions.add(transaction);
+        }
+
+        // Create batch rejection audit log
+        auditService.logEvent(
+                "TransactionBatch",
+                null,
+                "BATCH_REJECT",
+                rejecterId,
+                new Object() {
+                    public final String batchIdentifier = batchId;
+                    public final int count = rejectedTransactions.size();
+                }
+        );
+
+        return rejectedTransactions;
+    }
     @Override
     public Transaction getTransaction(Long id) {
         return transactionRepository.findByIdOptional(id)
