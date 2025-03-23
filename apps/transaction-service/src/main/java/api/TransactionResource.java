@@ -66,12 +66,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -170,12 +203,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -317,12 +383,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -417,12 +516,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -564,12 +696,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -678,12 +843,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
@@ -787,12 +985,45 @@ public class TransactionResource {
             responseCode = "400",
             description = "Missing required X-Tenant-ID header"
     )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-ID header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Email header"
+    )
+    @APIResponse(
+            responseCode = "400",
+            description = "Missing required X-User-Roles header"
+    )
     @Parameters({
             @Parameter(
                     name = "X-Tenant-ID",
                     in = ParameterIn.HEADER,
                     required = true,
                     description = "Tenant identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-ID",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User identifier",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Email",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Email",
+                    schema = @Schema(type = SchemaType.STRING)
+            ),
+            @Parameter(
+                    name = "X-User-Roles",
+                    in = ParameterIn.HEADER,
+                    required = true,
+                    description = "User Roles",
                     schema = @Schema(type = SchemaType.STRING)
             )
     })
