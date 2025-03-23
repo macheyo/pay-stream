@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Tag(name = "Bank", description = "Bank management operations")
-@RequiresRole("ADMIN")
 public class BankResource {
 
     @Inject
@@ -50,6 +49,7 @@ public class BankResource {
     UriInfo uriInfo;
 
     @POST
+    @RequiresRole("ADMIN")
     @Operation(summary = "Create a new bank",
             description = "Creates a new bank with provided details")
     @APIResponse(
@@ -204,6 +204,7 @@ public class BankResource {
     }
 
     @PUT
+    @RequiresRole("ADMIN")
     @Path("/{id}/toggle-status")
     @Operation(summary = "Toggle status of a bank",
             description = "Toggles the status of a bank")

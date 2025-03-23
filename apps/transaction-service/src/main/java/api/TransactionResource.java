@@ -19,6 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import service.TransactionService;
 import util.RequiresRole;
+import util.SecurityContext;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -43,6 +44,9 @@ public class TransactionResource {
 
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    SecurityContext securityContext;
 
     @Context
     UriInfo uriInfo;
@@ -104,13 +108,26 @@ public class TransactionResource {
                 .build();
         links.put("delete", deleteUri.toString());
 
-        // Toggle approval link
-        URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                .path(TransactionResource.class)
-                .path(String.valueOf(transaction.id))
-                .path("toggle-approval")
-                .build();
-        links.put("toggle-approval", toggleApprovalUri.toString());
+        if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+            // Check if user has approver role
+            if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                    !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                URI approveUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("approve")
+                        .build();
+                links.put("approve", approveUri.toString());
+
+                URI rejectUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("reject")
+                        .build();
+                links.put("reject", rejectUri.toString());
+            }
+        }
 
         // Collection link - back to all banks
         URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -220,13 +237,26 @@ public class TransactionResource {
                     .build();
             links.put("delete", deleteUri.toString());
 
-            // Toggle approval link
-            URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                    .path(TransactionResource.class)
-                    .path(String.valueOf(transaction.id))
-                    .path("toggle-approval")
-                    .build();
-            links.put("toggle-approval", toggleApprovalUri.toString());
+            if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+                // Check if user has approver role
+                if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                        !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                    URI approveUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("approve")
+                            .build();
+                    links.put("approve", approveUri.toString());
+
+                    URI rejectUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("reject")
+                            .build();
+                    links.put("reject", rejectUri.toString());
+                }
+            }
 
             // Collection link - back to all banks
             URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -326,13 +356,26 @@ public class TransactionResource {
                 .build();
         links.put("delete", deleteUri.toString());
 
-        // Toggle approval link
-        URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                .path(TransactionResource.class)
-                .path(String.valueOf(transaction.id))
-                .path("toggle-approval")
-                .build();
-        links.put("toggle-approval", toggleApprovalUri.toString());
+        if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+            // Check if user has approver role
+            if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                    !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                URI approveUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("approve")
+                        .build();
+                links.put("approve", approveUri.toString());
+
+                URI rejectUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("reject")
+                        .build();
+                links.put("reject", rejectUri.toString());
+            }
+        }
 
         // Collection link - back to all banks
         URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -437,13 +480,26 @@ public class TransactionResource {
                     .build();
             links.put("delete", deleteUri.toString());
 
-            // Toggle approval link
-            URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                    .path(TransactionResource.class)
-                    .path(String.valueOf(transaction.id))
-                    .path("toggle-approval")
-                    .build();
-            links.put("toggle-approval", toggleApprovalUri.toString());
+            if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+                // Check if user has approver role
+                if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                        !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                    URI approveUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("approve")
+                            .build();
+                    links.put("approve", approveUri.toString());
+
+                    URI rejectUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("reject")
+                            .build();
+                    links.put("reject", rejectUri.toString());
+                }
+            }
 
             // Collection link - back to all banks
             URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -553,13 +609,26 @@ public class TransactionResource {
                 .build();
         links.put("delete", deleteUri.toString());
 
-        // Toggle approval link
-        URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                .path(TransactionResource.class)
-                .path(String.valueOf(transaction.id))
-                .path("toggle-approval")
-                .build();
-        links.put("toggle-approval", toggleApprovalUri.toString());
+        if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+            // Check if user has approver role
+            if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                    !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                URI approveUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("approve")
+                        .build();
+                links.put("approve", approveUri.toString());
+
+                URI rejectUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("reject")
+                        .build();
+                links.put("reject", rejectUri.toString());
+            }
+        }
 
         // Collection link - back to all banks
         URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -654,13 +723,26 @@ public class TransactionResource {
                 .build();
         links.put("delete", deleteUri.toString());
 
-        // Toggle approval link
-        URI toggleApprovalUri = uriInfo.getBaseUriBuilder()
-                .path(TransactionResource.class)
-                .path(String.valueOf(transaction.id))
-                .path("toggle-approval")
-                .build();
-        links.put("toggle-approval", toggleApprovalUri.toString());
+        if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
+            // Check if user has approver role
+            if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                    !transaction.getCreatedBy().equals(securityContext.getUserId())) {
+
+                URI approveUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("approve")
+                        .build();
+                links.put("approve", approveUri.toString());
+
+                URI rejectUri = uriInfo.getBaseUriBuilder()
+                        .path(TransactionResource.class)
+                        .path(String.valueOf(transaction.id))
+                        .path("reject")
+                        .build();
+                links.put("reject", rejectUri.toString());
+            }
+        }
 
         // Collection link - back to all banks
         URI collectionUri = uriInfo.getBaseUriBuilder()
@@ -785,21 +867,24 @@ public class TransactionResource {
             }
 
             if (transaction.getStatus() == TransactionStatus.PENDING_APPROVAL) {
-                // Add approve link
-                URI approveUri = uriInfo.getBaseUriBuilder()
-                        .path(TransactionResource.class)
-                        .path(String.valueOf(transaction.id))
-                        .path("approve")
-                        .build();
-                txLinks.put("approve", approveUri.toString());
+                // Check if user has approver role
+                if (securityContext.hasRole("TRANSACTION_APPROVER") &&
+                        !transaction.getCreatedBy().equals(securityContext.getUserId())) {
 
-                // Add reject link
-                URI rejectUri = uriInfo.getBaseUriBuilder()
-                        .path(TransactionResource.class)
-                        .path(String.valueOf(transaction.id))
-                        .path("reject")
-                        .build();
-                txLinks.put("reject", rejectUri.toString());
+                    URI approveUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("approve")
+                            .build();
+                    links.put("approve", approveUri.toString());
+
+                    URI rejectUri = uriInfo.getBaseUriBuilder()
+                            .path(TransactionResource.class)
+                            .path(String.valueOf(transaction.id))
+                            .path("reject")
+                            .build();
+                    links.put("reject", rejectUri.toString());
+                }
             }
 
             // Collection link - back to all banks
